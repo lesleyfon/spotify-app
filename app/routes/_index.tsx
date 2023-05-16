@@ -7,7 +7,7 @@ export const meta: V2_MetaFunction = () => {
 export default function Index() {
 	return (
 		<main>
-			<h1>Welcome!!!</h1>
+			<h1 className="tw-font-sans tw-text-8xl">Welcome!!!</h1>
 		</main>
 	);
 }
