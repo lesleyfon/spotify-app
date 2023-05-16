@@ -18,7 +18,7 @@ export default function App() {
 				<Meta />
 				<Links />
 			</head>
-			<body>
+			<body className=" tw-container tw-flex">
 				<Outlet />
 				<ScrollRestoration />
 				<Scripts />
