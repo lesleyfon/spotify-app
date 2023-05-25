@@ -1,40 +1,9 @@
 import SpotifyWebApi from 'spotify-web-api-node'
 import dotenv from 'dotenv'
 
+import { ARTIST_TYPE, ENV_VARIABLE } from './APP_TYPES'
+
 dotenv.config()
-
-export type ENV_VARIABLE = {
-  CLIENT_ID: string
-  CLIENT_SECRET: string
-}
-
-export interface ARTIST_TYPE {
-  external_urls: ExternalUrls
-  followers: Followers
-  genres: string[]
-  href: string
-  id: string
-  images: Image[]
-  name: string
-  popularity: number
-  type: string
-  uri: string
-}
-
-export interface ExternalUrls {
-  spotify: string
-}
-
-export interface Followers {
-  href: null
-  total: number
-}
-
-export interface Image {
-  height: number
-  url: string
-  width: number
-}
 
 const config = process.env as unknown as ENV_VARIABLE
 
