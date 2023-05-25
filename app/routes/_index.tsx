@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import type { V2_MetaFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { ARTIST_TYPE, getArtist } from '~/utils/script.spotify'
+import { getArtist } from '~/utils/script.spotify'
 import { debounce } from '@mui/material/utils'
+import { ARTIST_TYPE } from '~/utils/APP_TYPES'
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: 'Spotify App' }]
@@ -52,7 +53,7 @@ export default function Index() {
 
   return (
     <main className="tw-w-full">
-      <h1 className="tw-font-sans tw-text-center tw-text-8xl tw-mx-auto">Welcome!!!</h1>
+      <h1 className="tw-font-sans tw-text-center tw-text-3xl tw-mx-auto">Welcome!!!</h1>
       <form className="tw-max-w-md tw-w-full tw-mx-auto tw-mt-12 " method="get">
         <div className="tw-relative">
           <input
