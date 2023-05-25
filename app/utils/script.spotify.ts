@@ -3,16 +3,42 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-type ENV_VARIABLE = {
+export type ENV_VARIABLE = {
   CLIENT_ID: string
   CLIENT_SECRET: string
 }
 
+export interface ARTIST_TYPE {
+  external_urls: ExternalUrls
+  followers: Followers
+  genres: string[]
+  href: string
+  id: string
+  images: Image[]
+  name: string
+  popularity: number
+  type: string
+  uri: string
+}
+
+export interface ExternalUrls {
+  spotify: string
+}
+
+export interface Followers {
+  href: null
+  total: number
+}
+
+export interface Image {
+  height: number
+  url: string
+  width: number
+}
+
 const config = process.env as unknown as ENV_VARIABLE
 
-console.log({ clientId: config.CLIENT_ID, clientSecret: config.CLIENT_SECRET })
-
-const spotifyApi = new SpotifyWebApi({
+let spotifyApi = new SpotifyWebApi({
   clientId: config.CLIENT_ID,
   clientSecret: config.CLIENT_SECRET,
 })
@@ -74,49 +100,21 @@ const fetchTracks = async (
   }
 }
 
-// spotifyApi
-//   .clientCredentialsGrant()
-//   .then((response: any) => {
-//     spotifyApi.setAccessToken(response.body.access_token)
-//     fetchTracks('Davido')
-//   })
-//   .catch((err) => {
-//     console.log(err)
-//   })
+const getUserAccessToken = async (config: ENV_VARIABLE): Promise<string> => {
+  if (!spotifyApi.clientCredentialsGrant) {
+    console.log(config)
+    spotifyApi = new SpotifyWebApi({
+      clientId: config.CLIENT_ID,
+      clientSecret: config.CLIENT_SECRET,
+    })
+  }
 
-const getUserAccessToken = async (): Promise<string> => {
+  console.log(spotifyApi)
+
   const credentialsRes = await spotifyApi.clientCredentialsGrant()
   const access_token = credentialsRes.body.access_token
 
   return access_token
-}
-
-export interface ARTIST_TYPE {
-  external_urls: ExternalUrls
-  followers: Followers
-  genres: string[]
-  href: string
-  id: string
-  images: Image[]
-  name: string
-  popularity: number
-  type: string
-  uri: string
-}
-
-export interface ExternalUrls {
-  spotify: string
-}
-
-export interface Followers {
-  href: null
-  total: number
-}
-
-export interface Image {
-  height: number
-  url: string
-  width: number
 }
 
 export async function getArtist(artistName: string): Promise<Array<ARTIST_TYPE> | null> {
@@ -124,8 +122,6 @@ export async function getArtist(artistName: string): Promise<Array<ARTIST_TYPE> 
     return null
   }
 
-  const accessToken = await getUserAccessToken()
-  spotifyApi.setAccessToken(accessToken)
   const artistList = (await spotifyApi.searchArtists(artistName)).body.artists
     ?.items as Array<ARTIST_TYPE> | null
 

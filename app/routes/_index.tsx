@@ -1,30 +1,69 @@
+import React, { useEffect, useMemo, useState } from 'react'
 import type { V2_MetaFunction } from '@remix-run/node'
-import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { getArtist } from '~/utils/script.spotify'
-
-export async function loader() {
-  const artist = await getArtist('Burna Boy')
-  return json({})
-}
+import { ARTIST_TYPE, getArtist } from '~/utils/script.spotify'
+import { debounce } from '@mui/material/utils'
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: 'Spotify App' }]
 }
 
 export default function Index() {
-  const data = useLoaderData<typeof loader>()
+  const [inputValue, setInputValue] = useState<string>('')
+  const [options, setOptions] = useState<readonly ARTIST_TYPE[]>([])
+
+  const fetch = useMemo(
+    () =>
+      debounce(
+        (request: { inputValue: string }, callback: (result: readonly ARTIST_TYPE[]) => void) => {
+          if (window === undefined) {
+            return
+          }
+
+          getArtist(request.inputValue)
+        },
+        1000
+      ),
+    []
+  )
+
+  useEffect(() => {
+    let active = true
+    if (inputValue.replace(/^\s+|\s+$/g, '') === '') {
+      return
+    }
+
+    fetch({ inputValue }, (results?: readonly ARTIST_TYPE[]) => {
+      if (active) {
+        let newOptions: readonly ARTIST_TYPE[] = []
+
+        if (results) {
+          newOptions = [...newOptions, ...results]
+        }
+
+        console.log(newOptions)
+      }
+    })
+
+    return () => {
+      active = false
+    }
+  }, [inputValue])
 
   return (
     <main className="tw-w-full">
       <h1 className="tw-font-sans tw-text-center tw-text-8xl tw-mx-auto">Welcome!!!</h1>
-      <form className="tw-max-w-md tw-w-full tw-mx-auto tw-mt-12 ">
+      <form className="tw-max-w-md tw-w-full tw-mx-auto tw-mt-12 " method="get">
         <div className="tw-relative">
           <input
             type="text"
             id="floating_filled"
-            className="tw-peer tw-pointer-events-auto tw-block tw-w-full tw-appearance-none tw-border-0 tw-border-b-2 tw-border-gray-300 tw-bg-gray-50 tw-px-2.5 tw-pb-2.5 tw-pt-5 tw-text-lg tw-text-gray-900 focus:tw-border-blue-600 focus:tw-outline-none focus:tw-ring-0 dark:tw-border-gray-600 dark:tw-bg-gray-700 dark:tw-text-white dark:focus:tw-border-blue-500"
+            name="artist"
             placeholder=" "
+            className="tw-peer tw-pointer-events-auto tw-block tw-w-full tw-appearance-none tw-border-0 tw-border-b-2 tw-border-gray-300 tw-bg-gray-50 tw-px-2.5 tw-pb-2.5 tw-pt-5 tw-text-lg tw-text-gray-900 focus:tw-border-blue-600 focus:tw-outline-none focus:tw-ring-0 dark:tw-border-gray-600 dark:tw-bg-gray-700 dark:tw-text-white dark:focus:tw-border-blue-500"
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setInputValue(event.target.value)
+            }}
           />
 
           <label
