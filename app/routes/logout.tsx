@@ -5,7 +5,9 @@ import { destroySession, getSession } from '~/service/session.server'
 export async function action({ request }: ActionArgs) {
   return redirect('/login', {
     headers: {
-      'Set-Cookie': await destroySession(await getSession(request.headers.get('cookie'))),
+      'Set-Cookie': await destroySession(await getSession(request.headers.get('cookie')), {
+        expires: new Date(0),
+      }),
     },
   })
 }
