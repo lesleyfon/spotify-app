@@ -1,68 +1,68 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { LoaderArgs, V2_MetaFunction, json } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
-import { getArtist } from '~/utils/script.spotify'
-import { debounce } from '@mui/material/utils'
-import { ARTIST_TYPE } from '~/utils/APP_TYPES'
-import { authenticator } from '~/service/auth.server'
-import { Session } from '~/utils/APP_TYPES'
-import NavBar from '~/components/navbar'
+import React, { useEffect, useMemo, useState } from 'react';
+import { LoaderArgs, V2_MetaFunction, json } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
+import { getArtist } from '~/utils/script.spotify';
+import { debounce } from '@mui/material/utils';
+import { ARTIST_TYPE } from '~/utils/APP_TYPES';
+import { authenticator } from '~/service/auth.server';
+import { Session } from '~/utils/APP_TYPES';
+import NavBar from '~/components/navbar';
 
 export const meta: V2_MetaFunction = () => {
-  return [{ title: 'Spotify App' }]
-}
+  return [{ title: 'Spotify App' }];
+};
 
 export const loader = async ({ request }: LoaderArgs) => {
   let user = (await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
-  })) as Session | null
+  })) as Session | null;
 
-  return json({ user })
-}
+  return json({ user });
+};
 
 export default function Index() {
-  const { user: userSession } = useLoaderData<typeof loader>()
+  const { user: userSession } = useLoaderData<typeof loader>();
 
-  const [inputValue, setInputValue] = useState<string>('')
-  const [options, setOptions] = useState<readonly ARTIST_TYPE[]>([])
+  const [inputValue, setInputValue] = useState<string>('');
+  const [options, setOptions] = useState<readonly ARTIST_TYPE[]>([]);
 
   const fetch = useMemo(
     () =>
       debounce(
         (request: { inputValue: string }, callback: (result: readonly ARTIST_TYPE[]) => void) => {
           if (window === undefined) {
-            return
+            return;
           }
 
-          getArtist(request.inputValue)
+          getArtist(request.inputValue);
         },
         1000
       ),
     []
-  )
+  );
 
   useEffect(() => {
-    let active = true
+    let active = true;
     if (inputValue.replace(/^\s+|\s+$/g, '') === '') {
-      return
+      return;
     }
 
     fetch({ inputValue }, (results?: readonly ARTIST_TYPE[]) => {
       if (active) {
-        let newOptions: readonly ARTIST_TYPE[] = []
+        let newOptions: readonly ARTIST_TYPE[] = [];
 
         if (results) {
-          newOptions = [...newOptions, ...results]
+          newOptions = [...newOptions, ...results];
         }
 
-        console.log(newOptions)
+        console.log(newOptions);
       }
-    })
+    });
 
     return () => {
-      active = false
-    }
-  }, [inputValue])
+      active = false;
+    };
+  }, [inputValue]);
 
   return (
     <>
@@ -80,7 +80,7 @@ export default function Index() {
               placeholder=" "
               className="tw-peer tw-pointer-events-auto tw-block tw-w-full tw-appearance-none tw-border-0 tw-border-b-2 tw-border-gray-300 tw-bg-gray-50 tw-px-2.5 tw-pb-2.5 tw-pt-5 tw-text-lg tw-text-gray-900 focus:tw-border-blue-600 focus:tw-outline-none focus:tw-ring-0 dark:tw-border-gray-600 dark:tw-bg-gray-700 dark:tw-text-white dark:focus:tw-border-blue-500"
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setInputValue(event.target.value)
+                setInputValue(event.target.value);
               }}
             />
 
@@ -108,5 +108,5 @@ export default function Index() {
         </form>
       </main>
     </>
-  )
+  );
 }

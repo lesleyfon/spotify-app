@@ -1,6 +1,6 @@
-import type { ActionArgs } from '@remix-run/node'
-import { json, redirect } from '@remix-run/node'
-import { destroySession, getSession } from '~/service/session.server'
+import type { ActionArgs } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import { destroySession, getSession } from '~/service/session.server';
 
 export async function action({ request }: ActionArgs) {
   return redirect('/login', {
@@ -9,9 +9,9 @@ export async function action({ request }: ActionArgs) {
         expires: new Date(0),
       }),
     },
-  })
+  });
 }
 
 export function loader() {
-  throw json({}, { status: 404 })
+  throw json({}, { status: 404 });
 }

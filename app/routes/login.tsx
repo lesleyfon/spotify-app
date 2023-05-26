@@ -1,15 +1,15 @@
-import type { LoaderArgs } from '@remix-run/node'
-import { Form, useLoaderData } from '@remix-run/react'
+import type { LoaderArgs } from '@remix-run/node';
+import { Form, useLoaderData } from '@remix-run/react';
 
-import { spotifyStrategy } from '~/service/auth.server'
+import { spotifyStrategy } from '~/service/auth.server';
 
 export async function loader({ request }: LoaderArgs) {
-  return spotifyStrategy.getSession(request)
+  return spotifyStrategy.getSession(request);
 }
 
 export default function Login() {
-  const data = useLoaderData<typeof loader>()
-  const user = data?.user
+  const data = useLoaderData<typeof loader>();
+  const user = data?.user;
 
   return (
     <div>
@@ -20,5 +20,5 @@ export default function Login() {
         </button>
       </Form>
     </div>
-  )
+  );
 }

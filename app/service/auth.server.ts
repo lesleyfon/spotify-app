@@ -1,21 +1,21 @@
-import { Authenticator } from 'remix-auth'
-import { SpotifyStrategy } from 'remix-auth-spotify'
+import { Authenticator } from 'remix-auth';
+import { SpotifyStrategy } from 'remix-auth-spotify';
 
-import { sessionStorage } from './session.server'
+import { sessionStorage } from './session.server';
 
 if (!process.env.CLIENT_ID) {
-  throw new Error('Missing SPOTIFY_CLIENT_ID env')
+  throw new Error('Missing SPOTIFY_CLIENT_ID env');
 }
 
 if (!process.env.CLIENT_SECRET) {
-  throw new Error('Missing SPOTIFY_CLIENT_SECRET env')
+  throw new Error('Missing SPOTIFY_CLIENT_SECRET env');
 }
 
 if (!process.env.SPOTIFY_CALLBACK_URL) {
-  throw new Error('Missing SPOTIFY_CALLBACK_URL env')
+  throw new Error('Missing SPOTIFY_CALLBACK_URL env');
 }
 
-const scopes = ['user-read-email'].join(' ')
+const scopes = ['user-read-email'].join(' ');
 
 export const spotifyStrategy = new SpotifyStrategy(
   {
@@ -37,11 +37,11 @@ export const spotifyStrategy = new SpotifyStrategy(
       image: profile.__json.images?.[0]?.url,
     },
   })
-)
+);
 
 export const authenticator = new Authenticator(sessionStorage, {
   sessionKey: spotifyStrategy.sessionKey,
   sessionErrorKey: spotifyStrategy.sessionErrorKey,
-})
+});
 
-authenticator.use(spotifyStrategy)
+authenticator.use(spotifyStrategy);

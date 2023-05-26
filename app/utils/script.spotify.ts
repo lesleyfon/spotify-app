@@ -1,22 +1,22 @@
-import SpotifyWebApi from 'spotify-web-api-node'
-import dotenv from 'dotenv'
+import SpotifyWebApi from 'spotify-web-api-node';
+import dotenv from 'dotenv';
 
-import { ARTIST_TYPE, ENV_VARIABLE } from './APP_TYPES'
+import { ARTIST_TYPE, ENV_VARIABLE } from './APP_TYPES';
 
-dotenv.config()
+dotenv.config();
 
-const config = process.env as unknown as ENV_VARIABLE
+const config = process.env as unknown as ENV_VARIABLE;
 
 let spotifyApi = new SpotifyWebApi({
   clientId: config.CLIENT_ID,
   clientSecret: config.CLIENT_SECRET,
-})
+});
 
 const sleep = function (time = 5000) {
-  setInterval(() => {}, time)
-}
+  setInterval(() => {}, time);
+};
 
-const trackName = new Set()
+const trackName = new Set();
 
 const fetchTracks = async (
   artistName: string,
@@ -24,75 +24,75 @@ const fetchTracks = async (
   stopCount = 0
 ) => {
   if (stopCount === 1) {
-    return
+    return;
   }
   try {
-    const response = await spotifyApi.searchTracks(`artist:${artistName}`, options)
-    const data: any = response.body
+    const response = await spotifyApi.searchTracks(`artist:${artistName}`, options);
+    const data: any = response.body;
 
     const filteredData = data.tracks.items.filter((item: any) =>
       item.artists.some((artist: any) => artist.name === artistName)
-    )
+    );
 
     filteredData.forEach((item: any) => {
       if (!trackName.has(item.name)) {
-        trackName.add(item.name)
+        trackName.add(item.name);
       }
-    })
+    });
 
-    const nextURL = data.tracks.next
+    const nextURL = data.tracks.next;
 
-    const searchParams = new URLSearchParams(nextURL)
+    const searchParams = new URLSearchParams(nextURL);
 
     if (
       searchParams === null ||
       searchParams.get('limit') === null ||
       searchParams.get('offset') === null
     ) {
-      return
+      return;
     }
 
-    const limit = parseInt(searchParams.get('limit')!, 10)
-    const offset = parseInt(searchParams.get('offset')!, 10)
+    const limit = parseInt(searchParams.get('limit')!, 10);
+    const offset = parseInt(searchParams.get('offset')!, 10);
 
-    options = { limit, offset }
-    console.log(nextURL)
+    options = { limit, offset };
+    console.log(nextURL);
     if (nextURL === null) {
-      return
+      return;
     }
 
-    await sleep()
+    await sleep();
 
     // await fetchTracks(artistName, options, stopCount + 1);
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
+};
 
 const getUserAccessToken = async (config: ENV_VARIABLE): Promise<string> => {
   if (!spotifyApi.clientCredentialsGrant) {
-    console.log(config)
+    console.log(config);
     spotifyApi = new SpotifyWebApi({
       clientId: config.CLIENT_ID,
       clientSecret: config.CLIENT_SECRET,
-    })
+    });
   }
 
-  console.log(spotifyApi)
+  console.log(spotifyApi);
 
-  const credentialsRes = await spotifyApi.clientCredentialsGrant()
-  const access_token = credentialsRes.body.access_token
+  const credentialsRes = await spotifyApi.clientCredentialsGrant();
+  const access_token = credentialsRes.body.access_token;
 
-  return access_token
-}
+  return access_token;
+};
 
 export async function getArtist(artistName: string): Promise<Array<ARTIST_TYPE> | null> {
   if (artistName === undefined) {
-    return null
+    return null;
   }
 
   const artistList = (await spotifyApi.searchArtists(artistName)).body.artists
-    ?.items as Array<ARTIST_TYPE> | null
+    ?.items as Array<ARTIST_TYPE> | null;
 
-  return artistList
+  return artistList;
 }
