@@ -5,7 +5,8 @@
     "build": "remix build",
     "dev": "remix dev",
     "typecheck": "tsc",
-    "lint": "eslint ."
+    "lint": "eslint . --report-unused-disable-directives",
+    "lint:fix": "pnpm lint --fix"
   },
   "dependencies": {
     "@emotion/react": "^11.11.0",
