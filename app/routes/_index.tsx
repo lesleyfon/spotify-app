@@ -2,6 +2,7 @@ import { debounce } from '@mui/material/utils';
 import { LoaderArgs, V2_MetaFunction, json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import React, { useEffect, useMemo, useState } from 'react';
+import ArtistCard from '~/components/artistcard';
 import NavBar from '~/components/navbar';
 import { authenticator } from '~/service/auth.server';
 import { ARTIST_TYPE, Session } from '~/utils/APP_TYPES';
@@ -73,7 +74,7 @@ export default function Index() {
   return (
     <>
       <NavBar />
-      <main className=" tw-container">
+      <main className=" tw-container tw-h-screen">
         <h1 className="tw-font-sans tw-text-center tw-text-3xl tw-mx-auto">
           Welcome {userSession?.user?.name}!!!
         </h1>
@@ -112,6 +113,8 @@ export default function Index() {
             </label>
           </div>
         </form>
+
+        {options.length ? options.map((artist) => <ArtistCard {...{ ...artist }} />) : ''}
       </main>
     </>
   );
