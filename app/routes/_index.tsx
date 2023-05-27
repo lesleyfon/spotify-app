@@ -1,12 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { debounce } from '@mui/material/utils';
 import { LoaderArgs, V2_MetaFunction, json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { getArtist } from '~/utils/script.spotify';
-import { debounce } from '@mui/material/utils';
-import { ARTIST_TYPE } from '~/utils/APP_TYPES';
-import { authenticator } from '~/service/auth.server';
-import { Session } from '~/utils/APP_TYPES';
+import React, { useEffect, useMemo, useState } from 'react';
 import NavBar from '~/components/navbar';
+import { authenticator } from '~/service/auth.server';
+import { ARTIST_TYPE, Session } from '~/utils/APP_TYPES';
+import { getArtist } from '~/utils/script.spotify';
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: 'Spotify App' }];
@@ -29,12 +28,19 @@ export default function Index() {
   const fetch = useMemo(
     () =>
       debounce(
-        (request: { inputValue: string }, callback: (result: readonly ARTIST_TYPE[]) => void) => {
-          if (window === undefined) {
+        async (
+          request: { inputValue: string; userSession: Session | null },
+          callback: (result: readonly ARTIST_TYPE[]) => void
+        ) => {
+          if (window === undefined || userSession === null) {
             return;
           }
+          const result = (await getArtist(
+            request.inputValue,
+            userSession
+          )) as unknown as ARTIST_TYPE[];
 
-          getArtist(request.inputValue);
+          callback(result);
         },
         1000
       ),
@@ -43,11 +49,11 @@ export default function Index() {
 
   useEffect(() => {
     let active = true;
+
     if (inputValue.replace(/^\s+|\s+$/g, '') === '') {
       return;
     }
-
-    fetch({ inputValue }, (results?: readonly ARTIST_TYPE[]) => {
+    fetch({ inputValue, userSession }, (results?: readonly ARTIST_TYPE[]) => {
       if (active) {
         let newOptions: readonly ARTIST_TYPE[] = [];
 
@@ -55,7 +61,7 @@ export default function Index() {
           newOptions = [...newOptions, ...results];
         }
 
-        console.log(newOptions);
+        setOptions(newOptions);
       }
     });
 

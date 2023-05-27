@@ -1,7 +1,7 @@
-import SpotifyWebApi from 'spotify-web-api-node';
 import dotenv from 'dotenv';
+import SpotifyWebApi from 'spotify-web-api-node';
 
-import { ARTIST_TYPE, ENV_VARIABLE } from './APP_TYPES';
+import { ARTIST_TYPE, ENV_VARIABLE, Session } from './APP_TYPES';
 
 dotenv.config();
 
@@ -86,13 +86,20 @@ const getUserAccessToken = async (config: ENV_VARIABLE): Promise<string> => {
   return access_token;
 };
 
-export async function getArtist(artistName: string): Promise<Array<ARTIST_TYPE> | null> {
+export async function getArtist(
+  artistName: string,
+  userSession: Session
+): Promise<Array<ARTIST_TYPE> | null> {
   if (artistName === undefined) {
     return null;
   }
 
-  const artistList = (await spotifyApi.searchArtists(artistName)).body.artists
-    ?.items as Array<ARTIST_TYPE> | null;
+  const { accessToken } = userSession;
+
+  await spotifyApi.setAccessToken(accessToken);
+
+  const artistList = (await spotifyApi.searchArtists(artistName, { limit: 5, offset: 1 })).body
+    .artists?.items as Array<ARTIST_TYPE> | null;
 
   return artistList;
 }
