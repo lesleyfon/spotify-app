@@ -73,6 +73,8 @@ export default function Index() {
     };
   }, [inputValue]);
 
+  console.log('Testing pre-commit hook');
+
   return (
     <>
       <NavBar />
