@@ -7,7 +7,8 @@
     "typecheck": "tsc",
     "lint": "eslint . --report-unused-disable-directives",
     "lint:fix": "npm lint --fix",
-    "fix:lint": "eslint --fix --ext .ts,.tsx ."
+    "fix:lint": "eslint --fix --ext .ts,.tsx .",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@emotion/react": "^11.11.0",
@@ -47,7 +48,7 @@
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
-    "husky": "^8.0.3",
+    "husky": "^8.0.0",
     "lint": "^0.8.19",
     "prettier": "^2.8.8",
     "tailwindcss": "^3.3.2",
@@ -58,7 +59,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm lint --fix"
+      "pre-commit": "npm run fix:lint"
     }
   }
 }
