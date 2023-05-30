@@ -1,6 +1,6 @@
-import type { ARTIST_TYPE } from '~/utils/APP_TYPES';
-import HeadShotPlaceholder from './placeholder';
 import { Fragment } from 'react';
+import HeadShotPlaceholder from './placeholder';
+import type { ARTIST_TYPE } from '~/utils/APP_TYPES';
 
 export default function ArtistCard({
   name,
@@ -36,6 +36,7 @@ export default function ArtistCard({
           href={external_urls.spotify}
           target="_blank"
           className="tw-font-small tw-text-wedgewood-600 dark:tw-text-wedgewood-500 hover:tw-underline hover:tw-decoration-wedgewood-600 hover:tw-underline-offset-4 hover:tw-decoration-2"
+          rel="noreferrer"
         >
           Go to Spotify Profile
         </a>
