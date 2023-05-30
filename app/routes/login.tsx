@@ -1,5 +1,5 @@
-import type { LoaderArgs } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
+import type { LoaderArgs } from '@remix-run/node';
 
 import { spotifyStrategy } from '~/service/auth.server';
 

@@ -1,5 +1,5 @@
-import type { ActionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
+import type { ActionArgs } from '@remix-run/node';
 import { destroySession, getSession } from '~/service/session.server';
 
 export async function action({ request }: ActionArgs) {

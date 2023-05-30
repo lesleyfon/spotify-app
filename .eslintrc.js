@@ -8,8 +8,11 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:jsx-a11y/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'eslint:recommended',
   ],
-  plugins: ['prettier', 'react'],
+  parser: '@typescript-eslint/parser',
+  plugins: ['prettier', 'react', '@typescript-eslint', 'autofix', 'react-hooks'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -17,12 +20,15 @@ module.exports = {
   },
   rules: {
     indent: 2,
+    'arrow-body-style': ['error', 'as-needed'],
+    'autofix/no-debugger': 'error',
     'prettier/prettier': ['error'],
-    'react-hooks/exhaustive-deps': 'warn',
+    'react-hooks/exhaustive-deps': 'error',
     'react-hooks/rules-of-hooks': 'error',
     'react/prefer-stateless-function': [1],
     'react/static-property-placement': [1, 'property assignment'],
     'react/prop-types': 'off',
+    'react/self-closing-comp': ['error', { component: true, html: true }],
     'no-console': [
       'error',
       {
@@ -53,5 +59,33 @@ module.exports = {
     'import/no-useless-path-segments': 'warn',
     'import/prefer-default-export': 'warn',
     'react/self-closing-comp': 'warn',
+    'autofix/no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+        ignoreRestSiblings: true,
+        destructuredArrayIgnorePattern: '^_',
+      },
+    ],
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'parent', 'sibling', 'index', 'object', 'type'],
+        pathGroups: [
+          {
+            pattern: '@/**/**',
+            group: 'parent',
+            position: 'before',
+          },
+        ],
+        alphabetize: { order: 'asc' },
+      },
+    ],
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: ['../'],
+      },
+    ],
   },
 };

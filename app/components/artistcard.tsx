@@ -1,7 +1,6 @@
-import { ARTIST_TYPE } from '~/utils/APP_TYPES';
+import type { ARTIST_TYPE } from '~/utils/APP_TYPES';
 
 export default function ArtistCard({ name, genres, followers, images, popularity }: ARTIST_TYPE) {
-  console.log(genres);
   return (
     <a
       href="#"

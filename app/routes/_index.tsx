@@ -1,19 +1,18 @@
 import { debounce } from '@mui/material/utils';
-import { LoaderArgs, V2_MetaFunction, json } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import React, { useEffect, useMemo, useState } from 'react';
+import type { LoaderArgs, V2_MetaFunction } from '@remix-run/node';
+import type { ARTIST_TYPE, Session } from '~/utils/APP_TYPES';
 import ArtistCard from '~/components/artistcard';
 import NavBar from '~/components/navbar';
 import { authenticator } from '~/service/auth.server';
-import { ARTIST_TYPE, Session } from '~/utils/APP_TYPES';
 import { getArtist } from '~/utils/script.spotify';
 
-export const meta: V2_MetaFunction = () => {
-  return [{ title: 'Spotify App' }];
-};
+export const meta: V2_MetaFunction = () => [{ title: 'Spotify App' }];
 
 export const loader = async ({ request }: LoaderArgs) => {
-  let user = (await authenticator.isAuthenticated(request, {
+  const user = (await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   })) as Session | null;
 

@@ -1,10 +1,11 @@
-import { LoaderArgs, json } from '@remix-run/node';
-import { NavLink, useLoaderData, useSubmit } from '@remix-run/react';
+import { json } from '@remix-run/node';
+import { useLoaderData, useSubmit } from '@remix-run/react';
+import type { LoaderArgs } from '@remix-run/node';
+import type { Session } from '~/utils/APP_TYPES';
 import { authenticator } from '~/service/auth.server';
-import { Session } from '~/utils/APP_TYPES';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  let user = (await authenticator.isAuthenticated(request, {
+  const user = (await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   })) as Session | null;
 

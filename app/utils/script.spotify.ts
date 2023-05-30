@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import SpotifyWebApi from 'spotify-web-api-node';
 
-import { ARTIST_TYPE, ENV_VARIABLE, Session } from './APP_TYPES';
+import type { ARTIST_TYPE, ENV_VARIABLE, Session } from './APP_TYPES';
 
 dotenv.config();
 
@@ -81,7 +81,7 @@ const getUserAccessToken = async (config: ENV_VARIABLE): Promise<string> => {
   console.log(spotifyApi);
 
   const credentialsRes = await spotifyApi.clientCredentialsGrant();
-  const access_token = credentialsRes.body.access_token;
+  const { access_token } = credentialsRes.body;
 
   return access_token;
 };
