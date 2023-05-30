@@ -35,6 +35,7 @@ export default function Index() {
           if (window === undefined || userSession === null) {
             return;
           }
+
           const result = (await getArtist(
             request.inputValue,
             userSession
@@ -51,8 +52,10 @@ export default function Index() {
     let active = true;
 
     if (inputValue.replace(/^\s+|\s+$/g, '') === '') {
+      setOptions([]);
       return;
     }
+
     fetch({ inputValue, userSession }, (results?: readonly ARTIST_TYPE[]) => {
       if (active) {
         let newOptions: readonly ARTIST_TYPE[] = [];
@@ -77,7 +80,7 @@ export default function Index() {
         <h1 className="tw-font-sans tw-text-center tw-text-3xl tw-mx-auto">
           Welcome {userSession?.user?.name}!!!
         </h1>
-        <form className="tw-max-w-md tw-w-full tw-mx-auto tw-mt-12 " method="get">
+        <form className=" tw-w-full tw-mx-auto tw-mt-12 " method="get">
           <div className="tw-relative">
             <input
               type="text"
@@ -112,8 +115,9 @@ export default function Index() {
             </label>
           </div>
         </form>
-
-        {options.length ? options.map((artist) => <ArtistCard {...{ ...artist }} />) : ''}
+        <section className=" tw-mt-5">
+          {options.length ? options.map((artist) => <ArtistCard {...{ ...artist }} />) : ''}
+        </section>
       </main>
     </>
   );

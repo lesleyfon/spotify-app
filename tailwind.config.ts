@@ -33,6 +33,7 @@ export default {
         '800': '#325158',
         '900': '#2d464c',
         '950': '#1a2c32',
+        gray: '#6A7B76',
       },
     },
     fontFamily: {
