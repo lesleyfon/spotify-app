@@ -29,6 +29,7 @@ module.exports = {
     'react/static-property-placement': [1, 'property assignment'],
     'react/prop-types': 'off',
     'react/self-closing-comp': ['error', { component: true, html: true }],
+    'react/react-in-jsx-scope': 'off',
     'no-console': [
       'error',
       {
@@ -47,6 +48,7 @@ module.exports = {
     'no-use-before-define': 'off',
     'object-curly-newline': 'off',
     'object-curly-spacing': [2, 'always'],
+    'no-unused-vars': 'error',
     quotes: [
       2,
       'single',

@@ -1,26 +1,38 @@
 import { Form, useLoaderData } from '@remix-run/react';
 import type { LoaderArgs } from '@remix-run/node';
 
+import type { Session } from '~/utils/APP_TYPES';
 import { spotifyStrategy } from '~/service/auth.server';
+import { createUserSession } from '~/sessions';
 
 export async function loader({ request }: LoaderArgs) {
-  return spotifyStrategy.getSession(request);
+  const userSession: Session | null = await spotifyStrategy.getSession(request);
+
+  if (userSession?.user) {
+    const { user } = userSession;
+    return createUserSession({ user, redirectTo: '/' });
+  }
+
+  return {
+    state: 'logged-out',
+  };
 }
 
 export default function Login() {
-  const data = useLoaderData<typeof loader>();
-  const user = data?.user;
+  useLoaderData<typeof loader>();
 
   return (
     <div className="tw-relative tw-flex tw-flex-col tw-justify-center tw-content-center tw-items-center tw-m-0 tw-h-screen">
       <Form
-        action={user ? '/logout' : '/auth/spotify'}
+        action="/auth/spotify"
         method="post"
-        className=" tw-shadow-custom tw-h-[500px] tw-flex tw-justify-center tw-content-center tw-items-center tw-w-[500px]"
+        className="tw-shadow-custom tw-h-[500px] tw-flex tw-justify-center tw-content-center tw-items-center tw-w-[500px]"
       >
-        <button className="tw-bg-wedgewood-500 hover:tw-bg-wedgewood-600 tw-text-wedgewood-50 tw-font-bold tw-py-2 tw-px-4 tw-rounded tw-transition tw-duration-300">
-          {user ? 'Logout ' : 'Log in with Spotify →'}
-        </button>
+        <div className="max-w-sm border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 tw-w-full tw-flex tw-justify-center tw-flex-col tw-flex-nowrap tw-items-center tw-gap-3">
+          <button className="tw-bg-wedgewood-500 hover:tw-bg-wedgewood-600 tw-text-wedgewood-50 tw-font-bold tw-py-2 tw-px-4 tw-rounded tw-transition tw-duration-300 tw-w-36">
+            Log in with Spotify →
+          </button>
+        </div>
 
         <div
           className="tw-absolute tw-inset-x-0 -tw-top-40 -tw-z-10 tw-transform-gpu tw-overflow-hidden tw-blur-2xl sm:-tw-top-80"
