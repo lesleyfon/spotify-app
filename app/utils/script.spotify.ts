@@ -1,16 +1,7 @@
-import dotenv from 'dotenv';
 import SpotifyWebApi from 'spotify-web-api-node';
+import type { ARTIST_TYPE, Session } from './APP_TYPES';
 
-import type { ARTIST_TYPE, ENV_VARIABLE, Session } from './APP_TYPES';
-
-dotenv.config();
-
-const config = process.env as unknown as ENV_VARIABLE;
-
-let spotifyApi = new SpotifyWebApi({
-  clientId: config.CLIENT_ID,
-  clientSecret: config.CLIENT_SECRET,
-});
+const spotifyApi = new SpotifyWebApi();
 
 const sleep = function (time = 5000) {
   setInterval(() => {}, time);
@@ -67,23 +58,6 @@ const fetchTracks = async (
   } catch (error) {
     console.error(error);
   }
-};
-
-const getUserAccessToken = async (config: ENV_VARIABLE): Promise<string> => {
-  if (!spotifyApi.clientCredentialsGrant) {
-    console.log(config);
-    spotifyApi = new SpotifyWebApi({
-      clientId: config.CLIENT_ID,
-      clientSecret: config.CLIENT_SECRET,
-    });
-  }
-
-  console.log(spotifyApi);
-
-  const credentialsRes = await spotifyApi.clientCredentialsGrant();
-  const { access_token } = credentialsRes.body;
-
-  return access_token;
 };
 
 export async function getArtist(

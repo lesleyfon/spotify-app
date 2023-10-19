@@ -1,7 +1,6 @@
 import { Authenticator } from 'remix-auth';
 import { SpotifyStrategy } from 'remix-auth-spotify';
-
-import { sessionStorage } from './session.server';
+import { sessionStorage } from '~/sessions';
 
 if (!process.env.CLIENT_ID) {
   throw new Error('Missing SPOTIFY_CLIENT_ID env');

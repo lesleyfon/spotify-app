@@ -1,17 +1,11 @@
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import type { ActionArgs } from '@remix-run/node';
-import { destroySession, getSession } from '~/service/session.server';
+import { logout } from '~/sessions';
 
 export async function action({ request }: ActionArgs) {
-  return redirect('/login', {
-    headers: {
-      'Set-Cookie': await destroySession(await getSession(request.headers.get('cookie')), {
-        expires: new Date(0),
-      }),
-    },
-  });
+  return await logout(request);
 }
 
-export function loader() {
-  throw json({}, { status: 404 });
+export async function loader() {
+  return redirect('/login', {});
 }
