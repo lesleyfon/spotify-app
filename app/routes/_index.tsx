@@ -1,14 +1,14 @@
-import React, { useEffect, useMemo, useState, useRef, Fragment } from 'react';
-import type { LoaderArgs, V2_MetaFunction } from '@remix-run/node';
 import { debounce } from '@mui/material/utils';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+import React, { useEffect, useMemo, useState, useRef, Fragment } from 'react';
+import type { LoaderArgs, V2_MetaFunction } from '@remix-run/node';
 import type { ARTIST_TYPE, OFFSET_LIMIT_OPTION_TYPE, Session } from '~/utils/APP_TYPES';
 import ArtistCard from '~/components/artistcard';
+import LoadingIndicator from '~/components/loadingIndicator';
 import NavBar from '~/components/navbar';
 import { authenticator } from '~/service/auth.server';
 import { getArtist } from '~/utils/script.spotify';
-import LoadingIndicator from '~/components/loadingIndicator';
 
 export const meta: V2_MetaFunction = () => [{ title: 'Spotify App' }];
 

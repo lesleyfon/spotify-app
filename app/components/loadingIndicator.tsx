@@ -1,4 +1,4 @@
-const LoadingIndicator = () => {
+function LoadingIndicator() {
   return (
     <div className="tw-flex tw-items-center tw-bg-red-200">
       <div aria-label="Loading..." role="status" className="tw-flex tw-items-center tw-space-x-2">
@@ -83,6 +83,6 @@ const LoadingIndicator = () => {
       </div>
     </div>
   );
-};
+}
 
 export default LoadingIndicator;
