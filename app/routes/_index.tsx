@@ -1,13 +1,14 @@
+import React, { useEffect, useMemo, useState, useRef, Fragment } from 'react';
+import type { LoaderArgs, V2_MetaFunction } from '@remix-run/node';
 import { debounce } from '@mui/material/utils';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import React, { useEffect, useMemo, useState } from 'react';
-import type { LoaderArgs, V2_MetaFunction } from '@remix-run/node';
-import type { ARTIST_TYPE, Session } from '~/utils/APP_TYPES';
+import type { ARTIST_TYPE, OFFSET_LIMIT_OPTION_TYPE, Session } from '~/utils/APP_TYPES';
 import ArtistCard from '~/components/artistcard';
 import NavBar from '~/components/navbar';
 import { authenticator } from '~/service/auth.server';
 import { getArtist } from '~/utils/script.spotify';
+import LoadingIndicator from '~/components/loadingIndicator';
 
 export const meta: V2_MetaFunction = () => [{ title: 'Spotify App' }];
 
@@ -24,22 +25,27 @@ export default function Index() {
 
   const [inputValue, setInputValue] = useState<string>('');
   const [options, setOptions] = useState<readonly ARTIST_TYPE[]>([]);
+  const sectionEndRef = useRef<HTMLDivElement>(null);
 
   const fetch = useMemo(
     () =>
       debounce(
         async (
-          request: { inputValue: string; userSession: Session | null },
+          request: {
+            inputValue: string;
+            userSession: Session | null;
+            options?: OFFSET_LIMIT_OPTION_TYPE;
+          },
           callback: (result: readonly ARTIST_TYPE[]) => void
         ) => {
           if (window === undefined || userSession === null) {
             return;
           }
 
-          const result = (await getArtist(
-            request.inputValue,
-            userSession
-          )) as unknown as ARTIST_TYPE[];
+          const result = (await getArtist(request.inputValue, userSession, {
+            limit: request.options?.limit ?? 10,
+            offset: request.options?.offset ?? 0,
+          })) as ARTIST_TYPE[];
 
           callback(result);
         },
@@ -73,8 +79,39 @@ export default function Index() {
     };
   }, [inputValue]);
 
-  console.log('Testing pre-commit hook');
+  useEffect(() => {
+    if (sectionEndRef.current === null) {
+      return;
+    }
 
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          const opt: OFFSET_LIMIT_OPTION_TYPE = {
+            limit: 10,
+            offset: options.length,
+          };
+
+          fetch({ inputValue, userSession, options: opt }, (results?: readonly ARTIST_TYPE[]) => {
+            if (results) {
+              setOptions([...options, ...results]);
+            }
+          });
+        }
+      },
+      {
+        threshold: 0.75,
+      }
+    );
+    if (options.length > 0) {
+      observer.observe(sectionEndRef.current!);
+    }
+    return () => {
+      observer.disconnect();
+    };
+  }, [sectionEndRef, options]);
+
+  const isLoading = options.length === 0 && inputValue.trim().length > 0;
   return (
     <>
       <NavBar />
@@ -118,7 +155,19 @@ export default function Index() {
           </div>
         </form>
         <section className=" tw-mt-5">
-          {options.length ? options.map((artist) => <ArtistCard {...{ ...artist }} />) : ''}
+          {isLoading && <LoadingIndicator />}
+          {options.length ? (
+            <>
+              {options.map((artist) => (
+                <Fragment key={artist.uri}>
+                  <ArtistCard {...{ ...artist }} />
+                </Fragment>
+              ))}
+              <div id="section-end" ref={sectionEndRef}>
+                <LoadingIndicator />
+              </div>
+            </>
+          ) : null}
         </section>
       </main>
     </>

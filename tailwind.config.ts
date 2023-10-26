@@ -41,6 +41,9 @@ export default {
       serif: ['Merriweather', 'serif'],
     },
     extend: {
+      animation: {
+        'spin-slow': 'spin 3s linear infinite',
+      },
       spacing: {
         '128': '32rem',
         '144': '36rem',

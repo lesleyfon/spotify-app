@@ -4,6 +4,9 @@ node_modules
 .env
 .vercel
 .output
+metafile.css.json
+metafile.js.json
+metafile.server.json
 
 /build/
 /public/build

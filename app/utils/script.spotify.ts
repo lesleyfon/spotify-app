@@ -62,7 +62,8 @@ const fetchTracks = async (
 
 export async function getArtist(
   artistName: string,
-  userSession: Session
+  userSession: Session,
+  options = { limit: 5, offset: 0 }
 ): Promise<Array<ARTIST_TYPE> | null> {
   if (artistName === undefined) {
     return null;
@@ -72,8 +73,8 @@ export async function getArtist(
 
   await spotifyApi.setAccessToken(accessToken);
 
-  const artistList = (await spotifyApi.searchArtists(artistName, { limit: 5, offset: 1 })).body
-    .artists?.items as Array<ARTIST_TYPE> | null;
+  const artistList = (await spotifyApi.searchArtists(artistName, options)).body.artists
+    ?.items as Array<ARTIST_TYPE> | null;
 
   return artistList;
 }
