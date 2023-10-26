@@ -111,3 +111,8 @@ export interface Image {
   url: string;
   width: number;
 }
+
+export interface OFFSET_LIMIT_OPTION_TYPE {
+  limit: number;
+  offset: number;
+}
