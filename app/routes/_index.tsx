@@ -160,7 +160,7 @@ export default function Index() {
             <>
               {options.map((artist) => (
                 <Fragment key={artist.uri}>
-                  <Link to={`/artist/${artist.id}`} className="tw-block tw-mb-5">
+                  <Link to={`/artist/${artist.id}`} className="tw-block tw-mb-5" prefetch="intent">
                     <ArtistCard {...{ ...artist }} />
                   </Link>
                 </Fragment>
