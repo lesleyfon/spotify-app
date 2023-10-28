@@ -1,11 +1,11 @@
-import type { LoaderFunctionArgs } from '@remix-run/router';
-import type { LoaderArgs } from '@remix-run/node';
-import { Link, useLoaderData } from '@remix-run/react';
 import { redirect } from '@remix-run/node';
-import { getArtist, getArtistTopTracks } from '~/utils/script.spotify';
-import { TRACK_TYPE, ARTIST_TYPE, Session, CustomCSSProperties } from '~/utils/APP_TYPES';
-import { authenticator } from '~/service/auth.server';
+import { Link, useLoaderData } from '@remix-run/react';
+import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/router';
+import type { TRACK_TYPE, ARTIST_TYPE, Session, CustomCSSProperties } from '~/utils/APP_TYPES';
 import CheckMark from '~/components/checkmark';
+import { authenticator } from '~/service/auth.server';
+import { getArtist, getArtistTopTracks } from '~/utils/script.spotify';
 
 export const loader = async ({ params, request }: LoaderFunctionArgs | LoaderArgs) => {
   try {

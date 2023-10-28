@@ -1,5 +1,5 @@
-import { CSSProperties } from 'react';
 import type { SessionStorage } from '@remix-run/server-runtime';
+import type { CSSProperties } from 'react';
 import type { OAuth2Profile } from 'remix-auth-oauth2';
 
 export interface CustomCSSProperties extends CSSProperties {
