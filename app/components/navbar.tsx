@@ -1,5 +1,5 @@
 import { json } from '@remix-run/node';
-import { useLoaderData, useSubmit } from '@remix-run/react';
+import { Link, useLoaderData, useSubmit } from '@remix-run/react';
 import type { LoaderArgs } from '@remix-run/node';
 import type { Session } from '~/utils/APP_TYPES';
 import { authenticator } from '~/service/auth.server';
@@ -26,10 +26,12 @@ export default function NavBar() {
 
   const { user } = useLoaderData<typeof loader>();
   return (
-    <nav className=" tw-bg-wedgewood-300 tw-border-gray-200 dark:tw-bg-gray-900">
+    <nav className="tw-bg-wedgewood-300 tw-border-gray-200 dark:tw-bg-gray-900 tw-fixed tw-left-0 tw-right-0 tw-top-0 tw-z-50 tw-w-full">
       <div className="tw-max-w-screen-xl tw-flex tw-flex-wrap tw-items-center tw-justify-between mtw-x-auto tw-p-4">
         <h1 className="tw-flex tw-items-center">
-          <SvgComponent />
+          <Link to="/" className="tw-flex tw-items-center">
+            <SvgComponent />
+          </Link>
         </h1>
         <div className="tw-hidden tw-w-full md:tw-block md:tw-w-auto" id="navbar-default">
           <ul className="tw-font-medium tw-flex tw-flex-col tw-p-4 md:tw-p-0 tw-mt-4 tw-border tw-border-gray-100 tw-rounded-lg tw-bg-gray-50 md:tw-flex-row md:tw-space-x-8 md:tw-mt-0 md:tw-border-0 md:tw-bg-white dark:tw-bg-gray-800 md:dark:tw-bg-gray-900 dark:tw-border-gray-tw-text-wedgewood-950700">
