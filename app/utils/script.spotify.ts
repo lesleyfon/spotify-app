@@ -1,5 +1,5 @@
 import SpotifyWebApi from 'spotify-web-api-node';
-import type { ARTIST_TYPE, Session } from './APP_TYPES';
+import type { ARTIST_TYPE, Session, TRACK_TYPE } from './APP_TYPES';
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -60,7 +60,7 @@ const fetchTracks = async (
   }
 };
 
-export async function getArtist(
+export async function getArtists(
   artistName: string,
   userSession: Session,
   options = { limit: 5, offset: 0 }
@@ -77,4 +77,44 @@ export async function getArtist(
     ?.items as Array<ARTIST_TYPE> | null;
 
   return artistList;
+}
+
+export async function getArtist({
+  artistId,
+  userSession,
+}: {
+  artistId: string;
+  userSession: Session;
+}): Promise<ARTIST_TYPE | null> {
+  if (artistId === undefined) {
+    return null;
+  }
+
+  const { accessToken } = userSession;
+
+  await spotifyApi.setAccessToken(accessToken);
+
+  const artist = (await spotifyApi.getArtist(artistId)).body as ARTIST_TYPE | null;
+
+  return artist;
+}
+export async function getArtistTopTracks({
+  artistId,
+  userSession,
+}: {
+  artistId: string;
+  userSession: Session;
+}): Promise<Array<TRACK_TYPE> | null> {
+  if (artistId === undefined) {
+    return null;
+  }
+
+  const { accessToken } = userSession;
+
+  await spotifyApi.setAccessToken(accessToken);
+
+  const artistTopTracks = (await spotifyApi.getArtistTopTracks(artistId, 'US')).body
+    .tracks as Array<TRACK_TYPE>;
+
+  return artistTopTracks.slice(0, 5);
 }

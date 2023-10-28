@@ -1,7 +1,13 @@
 import type { SessionStorage } from '@remix-run/server-runtime';
-
+import type { CSSProperties } from 'react';
 import type { OAuth2Profile } from 'remix-auth-oauth2';
 
+export interface CustomCSSProperties extends CSSProperties {
+  '--artist-image-url': string;
+  '--image-url': string;
+  '--bg-position': string;
+  '--min-jumbotron-height': string;
+}
 export interface SpotifyStrategyOptions {
   clientID: string;
   clientSecret: string;
@@ -59,6 +65,7 @@ export interface User {
   name?: string;
   image?: string;
 }
+
 export interface Session {
   accessToken: string;
   expiresAt: number;
@@ -115,4 +122,84 @@ export interface Image {
 export interface OFFSET_LIMIT_OPTION_TYPE {
   limit: number;
   offset: number;
+}
+
+export interface ExternalIdObject {
+  isrc?: string | undefined;
+  ean?: string | undefined;
+  upc?: string | undefined;
+}
+
+export interface ExternalUrlObject {
+  spotify: string;
+}
+
+export interface ContextObject {
+  type: 'artist' | 'playlist' | 'album' | 'show' | 'episode';
+  href: string;
+  external_urls: ExternalUrlObject;
+  uri: string;
+}
+
+export interface ArtistObjectSimplified extends ContextObject {
+  name: string;
+  id: string;
+  type: 'artist';
+}
+
+export interface TrackLinkObject {
+  external_urls: ExternalUrlObject;
+  href: string;
+  id: string;
+  type: 'track';
+  uri: string;
+}
+
+export interface RestrictionsObject {
+  reason: string;
+}
+
+export interface TrackObjectSimplified {
+  artists: ArtistObjectSimplified[];
+  available_markets?: string[] | undefined;
+  disc_number: number;
+  duration_ms: number;
+  explicit: boolean;
+  external_urls: ExternalUrlObject;
+  href: string;
+  id: string;
+  is_playable?: boolean | undefined;
+  linked_from?: TrackLinkObject | undefined;
+  restrictions?: RestrictionsObject | undefined;
+  name: string;
+  preview_url: string | null;
+  track_number: number;
+  type: 'track';
+  uri: string;
+}
+
+export interface TRACK_TYPE extends TrackObjectSimplified {
+  album: AlbumObjectSimplified;
+
+  external_ids: ExternalIdObject;
+  popularity: number;
+  is_local?: boolean | undefined;
+}
+export interface ARTIST_TOP_TRACKS_TYPE {
+  tracks: TRACK_TYPE[];
+}
+
+interface AlbumObjectSimplified extends ContextObject {
+  album_group?: 'album' | 'single' | 'compilation' | 'appears_on' | undefined;
+  album_type: 'album' | 'single' | 'compilation';
+  artists: ArtistObjectSimplified[];
+  available_markets?: string[] | undefined;
+  id: string;
+  images: SpotifyImage[];
+  name: string;
+  release_date: string;
+  release_date_precision: 'year' | 'month' | 'day';
+  restrictions?: RestrictionsObject | undefined;
+  type: 'album';
+  total_tracks: number;
 }

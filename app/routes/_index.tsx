@@ -1,6 +1,6 @@
 import { debounce } from '@mui/material/utils';
 import { json } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import React, { useEffect, useMemo, useState, useRef, Fragment } from 'react';
 import type { LoaderArgs, V2_MetaFunction } from '@remix-run/node';
 import type { ARTIST_TYPE, OFFSET_LIMIT_OPTION_TYPE, Session } from '~/utils/APP_TYPES';
@@ -8,7 +8,7 @@ import ArtistCard from '~/components/artistcard';
 import LoadingIndicator from '~/components/loadingIndicator';
 import NavBar from '~/components/navbar';
 import { authenticator } from '~/service/auth.server';
-import { getArtist } from '~/utils/script.spotify';
+import { getArtists } from '~/utils/script.spotify';
 
 export const meta: V2_MetaFunction = () => [{ title: 'Spotify App' }];
 
@@ -42,7 +42,7 @@ export default function Index() {
             return;
           }
 
-          const result = (await getArtist(request.inputValue, userSession, {
+          const result = (await getArtists(request.inputValue, userSession, {
             limit: request.options?.limit ?? 10,
             offset: request.options?.offset ?? 0,
           })) as ARTIST_TYPE[];
@@ -115,7 +115,7 @@ export default function Index() {
   return (
     <>
       <NavBar />
-      <main className=" tw-container tw-h-screen">
+      <main className=" tw-container tw-h-screen tw-relative ">
         <h1 className="tw-font-sans tw-text-center tw-text-3xl tw-mx-auto">
           Welcome {userSession?.user?.name}!!!
         </h1>
@@ -160,7 +160,9 @@ export default function Index() {
             <>
               {options.map((artist) => (
                 <Fragment key={artist.uri}>
-                  <ArtistCard {...{ ...artist }} />
+                  <Link to={`/artist/${artist.id}`} className="tw-block tw-mb-5" prefetch="intent">
+                    <ArtistCard {...{ ...artist }} />
+                  </Link>
                 </Fragment>
               ))}
               <div id="section-end" ref={sectionEndRef}>
